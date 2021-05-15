@@ -29,6 +29,7 @@ router.post(
   "/",
   [
     check("nombre", "el nombre es obligatorio").not().isEmpty(),
+    check("correo", "el correo es obligatorio").not().isEmpty(),
     check("password", "la contrasena debe ser de 6 caracteres o mas").isLength({
       min: 6,
     }),

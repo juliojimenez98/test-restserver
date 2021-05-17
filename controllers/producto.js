@@ -29,9 +29,9 @@ const obtenerProductoPorId = async (req, res = response) => {
 
 //Crear productos
 const crearProducto = async (req, res = response) => {
-  const { nombre, descripcion } = req.body;
+  const { estado, usuario, ...body } = req.body;
 
-  const productoDB = await Producto.findOne({ nombre });
+  const productoDB = await Producto.findOne({ nombre: body.nombre });
 
   if (productoDB) {
     return res.status(400).json({
@@ -40,9 +40,8 @@ const crearProducto = async (req, res = response) => {
   }
   //Generar data a guardar
   const data = {
-    nombre,
-    descripcion,
-    usuario: req._id,
+    ...body,
+    usuario: req.usuario._id,
   };
 
   const producto = new Producto(data);

@@ -1,5 +1,5 @@
 const { response, request } = require("express");
-const { Bodega } = require("../models");
+const { Bodega, Movimiento } = require("../models");
 
 //Obtener todas las bodegas
 const obtenerBodegas = async (req, res = response) => {
@@ -58,6 +58,8 @@ const crearBodega = async (req, res = response) => {
 const actualizarBodega = async (req, res = response) => {
   const { id } = req.params;
 
+  const antiguo = await Bodega.findById(id);
+
   const { estado, usuario, ...data } = req.body;
 
   data.usuario = req.usuario._id;
@@ -65,6 +67,27 @@ const actualizarBodega = async (req, res = response) => {
   const bodega = await Bodega.findByIdAndUpdate(id, data, { new: true });
 
   res.json(bodega);
+  const movimientos = {
+    bodega: bodega.id,
+    productos: bodega.producto,
+    usuario: req.usuario._id,
+    tipoMovimiento: 0,
+    cantidadMovimiento: 0,
+  };
+
+  if (antiguo.producto.length < movimientos.productos.length) {
+    movimientos.tipoMovimiento = 1; //Se agregaron Productos
+    movimientos.cantidadMovimiento =
+      movimientos.productos.length - antiguo.producto.length;
+    const movimiento = new Movimiento(movimientos);
+    await movimiento.save();
+  } else if (antiguo.producto.length > movimientos.productos.length) {
+    movimientos.tipoMovimiento = 2; //Se Retiraron productos
+    movimientos.cantidadMovimiento =
+      movimientos.productos.length - antiguo.producto.length;
+    const movimiento = new Movimiento(movimientos);
+    await movimiento.save();
+  }
 };
 
 //Bloquear Bodega

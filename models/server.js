@@ -12,6 +12,7 @@ class Server {
       bodegas: "/api/bodegas",
       usuarios: "/api/usuarios",
       productos: "/api/productos",
+      movimientos: "/api/movimientos",
     };
 
     //Conectar a bbdd
@@ -44,6 +45,7 @@ class Server {
     this.app.use(this.path.usuarios, require("../routes/usuarios"));
     this.app.use(this.path.bodegas, require("../routes/bodegas"));
     this.app.use(this.path.productos, require("../routes/productos"));
+    this.app.use(this.path.movimientos, require("../routes/movimientos"));
   }
 
   listen() {

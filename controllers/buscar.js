@@ -39,7 +39,7 @@ const buscarProductos = async (termino = "", res = response) => {
 
   const productos = await Producto.find({
     $or: [{ nombre: regex }, { descripcion: regex }],
-  });
+  }).populate("usuario", "nombre");
 
   res.json({
     results: productos,
@@ -50,7 +50,9 @@ const buscarBodegas = async (termino = "", res = response) => {
   const isMongoID = ObjectId.isValid(termino);
 
   if (isMongoID) {
-    const bodega = await Bodega.findById(termino);
+    const bodega = await (
+      await Bodega.findById(termino)
+    ).populate("producto", "nombre");
     return res.json({
       results: bodega ? [bodega] : [],
     });
@@ -60,7 +62,7 @@ const buscarBodegas = async (termino = "", res = response) => {
 
   const bodegas = await Bodega.find({
     $or: [{ nombre: regex }, { descripcion: regex }],
-  });
+  }).populate("producto", "nombre");
 
   res.json({
     results: bodegas,

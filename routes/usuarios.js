@@ -19,6 +19,7 @@ const {
   usuariosPut,
   usuariosDelete,
   usuariosPatch,
+  desbloquearUsuarios,
 } = require("../controllers/usuarios");
 
 const router = Router();
@@ -65,5 +66,17 @@ router.delete(
   usuariosDelete
 );
 router.patch("/", usuariosPatch);
+
+router.delete(
+  "/:id/unlock",
+  [
+    validarJWT,
+    isAdminRole,
+    check("id", "No es un ID Valido").isMongoId(),
+    check("id").custom(existsUserById),
+    validarCampos,
+  ],
+  desbloquearUsuarios
+);
 
 module.exports = router;

@@ -79,10 +79,23 @@ const borrarProducto = async (req, res = response) => {
   res.json(productoBorrado);
 };
 
+const desbloquearProductos = async (req, res = response) => {
+  const { id } = req.params;
+
+  const productoDesbloqueado = await Producto.findByIdAndUpdate(
+    id,
+    { estado: true },
+    { new: true }
+  );
+
+  res.json(productoDesbloqueado);
+};
+
 module.exports = {
   crearProducto,
   obtenerProductos,
   obtenerProductoPorId,
   borrarProducto,
   actualizarProducto,
+  desbloquearProductos,
 };

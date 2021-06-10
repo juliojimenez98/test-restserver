@@ -75,6 +75,20 @@ const usuariosDelete = async (req = request, res = response) => {
   });
 };
 
+const desbloquearUsuarios = async (req = request, res = response) => {
+  const { id } = req.params;
+
+  const usuario = await Usuario.findByIdAndUpdate(
+    id,
+    { estado: true },
+    { new: true }
+  );
+
+  res.json({
+    usuario,
+  });
+};
+
 const usuariosPatch = (req = request, res = response) => {
   res.json({
     ok: true,
@@ -88,4 +102,5 @@ module.exports = {
   usuariosPut,
   usuariosDelete,
   usuariosPatch,
+  desbloquearUsuarios,
 };

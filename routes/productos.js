@@ -6,6 +6,7 @@ const {
   obtenerProductoPorId,
   actualizarProducto,
   borrarProducto,
+  desbloquearProductos,
 } = require("../controllers/producto");
 const { existeProductoPorId } = require("../helpers/db-validators");
 const { validarJWT, validarCampos, isAdminRole } = require("../middlewares");
@@ -64,6 +65,19 @@ router.delete(
     validarCampos,
   ],
   borrarProducto
+);
+
+//Desbloquear producto
+router.delete(
+  "/:id/unlock",
+  [
+    validarJWT,
+    isAdminRole,
+    check("id", "el id no es valido").isMongoId(),
+    check("id").custom(existeProductoPorId),
+    validarCampos,
+  ],
+  desbloquearProductos
 );
 
 module.exports = router;

@@ -103,10 +103,24 @@ const borrarBodega = async (req, res = response) => {
   res.json(bodegaBorrada);
 };
 
+// DEsbloquear Bodegas
+const desbloquearBodegas = async (req, res = response) => {
+  const { id } = req.params;
+
+  const bodegaDesbloqueada = await Bodega.findByIdAndUpdate(
+    id,
+    { estado: true },
+    { new: true }
+  );
+
+  res.json(bodegaDesbloqueada);
+};
+
 module.exports = {
   crearBodega,
   obtenerBodegas,
   obtenerBodegasPorId,
   actualizarBodega,
   borrarBodega,
+  desbloquearBodegas,
 };

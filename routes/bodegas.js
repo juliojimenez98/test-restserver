@@ -6,6 +6,7 @@ const {
   obtenerBodegasPorId,
   actualizarBodega,
   borrarBodega,
+  desbloquearBodegas,
 } = require("../controllers/bodegas");
 const {
   existeProductoPorId,
@@ -67,6 +68,18 @@ router.delete(
     validarCampos,
   ],
   borrarBodega
+);
+
+router.delete(
+  "/:id/unlock",
+  [
+    validarJWT,
+    isAdminRole,
+    check("id", "el id no es valido").isMongoId(),
+    check("id").custom(existeBodegaPorId),
+    validarCampos,
+  ],
+  desbloquearBodegas
 );
 
 module.exports = router;

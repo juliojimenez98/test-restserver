@@ -25,6 +25,13 @@ const usuariosGet = async (req = request, res = response) => {
   });
 };
 
+const obtenerUsuariosId = async (req, res = response) => {
+  const { id } = req.params;
+  const usuario = await Usuario.findById(id);
+
+  res.json(usuario);
+};
+
 const usuariosPost = async (req = request, res = response) => {
   const { nombre, correo, password, role } = req.body;
 
@@ -44,7 +51,7 @@ const usuariosPost = async (req = request, res = response) => {
 
 const usuariosPut = async (req = request, res = response) => {
   const id = req.params.id;
-  const { _id, password, google, correo, ...resto } = req.body;
+  const { _id, password, google, ...resto } = req.body;
 
   if (password) {
     //Encriptar contrasena
@@ -52,7 +59,7 @@ const usuariosPut = async (req = request, res = response) => {
     resto.password = bcryptjs.hashSync(password, salt);
   }
 
-  const usuario = await Usuario.findByIdAndUpdate(id, resto);
+  const usuario = await Usuario.findByIdAndUpdate(id, resto, { new: true });
 
   res.json({
     msg: "Se actualizo correctamente el usuario",
@@ -103,4 +110,5 @@ module.exports = {
   usuariosDelete,
   usuariosPatch,
   desbloquearUsuarios,
+  obtenerUsuariosId,
 };

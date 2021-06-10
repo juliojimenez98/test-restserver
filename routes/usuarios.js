@@ -20,11 +20,24 @@ const {
   usuariosDelete,
   usuariosPatch,
   desbloquearUsuarios,
+  obtenerUsuariosId,
 } = require("../controllers/usuarios");
 
 const router = Router();
 
 router.get("/", usuariosGet);
+
+//Get bodega por id
+router.get(
+  "/:id",
+  [
+    validarJWT,
+    check("id", "el id no es valido").isMongoId(),
+    check("id").custom(existsUserById),
+    validarCampos,
+  ],
+  obtenerUsuariosId
+);
 
 router.post(
   "/",
